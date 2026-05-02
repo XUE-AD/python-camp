@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隨機順序決定器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 { color: #333; }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 1rem;
+        }
+        .btns {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-start { background-color: #4CAF50; color: white; }
+        .btn-start:hover { background-color: #45a049; }
+        .btn-reset { background-color: #e7e7e7; color: #333; }
+        .btn-reset:hover { background-color: #ddd; }
+        
+        #result {
+            margin-top: 1.5rem;
+            text-align: left;
+            background: #fffbe6;
+            border-left: 5px solid #ffc107;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        ol { padding-left: 25px; }
+        li { margin-bottom: 5px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎲 順序決定器</h2>
+    <p style="color: #666; font-size: 14px;">請在下方輸入名單（一人一行）</p>
+    <textarea id="inputList" placeholder="例如：&#10;小明&#10;小華&#10;大強"></textarea>
+    
+    <div class="btns">
+        <button class="btn-reset" onclick="resetAll()">清空</button>
+        <button class="btn-start" onclick="shuffleOrder()">開始排序</button>
+    </div>
+
+    <div id="result">
+        <strong>✨ 最終順序：</strong>
+        <ol id="orderList"></ol>
+    </div>
+</div>
+
+<script>
+    function shuffleOrder() {
+        const text = document.getElementById('inputList').value.trim();
+        if (!text) {
+            alert("請先輸入名單喔！");
+            return;
+        }
+
+        // 將字串轉為陣列並去除空白行
+        let items = text.split('\n').filter(item => item.trim() !== "");
+        
+        // Fisher-Yates Shuffle 隨機演算法
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        // 渲染結果
+        const listDisplay = document.getElementById('orderList');
+        const resultDiv = document.getElementById('result');
+        listDisplay.innerHTML = "";
+        
+        items.forEach(item => {
+            let li = document.createElement('li');
+            li.textContent = item;
+            listDisplay.appendChild(li);
+        });
+
+        resultDiv.style.display = "block";
+    }
+
+    function resetAll() {
+        document.getElementById('inputList').value = "";
+        document.getElementById('result').style.display = "none";
+    }
+</script>
+
+</body>
+</html>
